@@ -29,7 +29,7 @@ CLOUD_INIT_PACKAGES="tmux curl bridge-utils cloud-image-utils cloud-utils cpu-ch
 
 PACKAGES="$LAYER_BASIC $DOWNLOAD_PACKAGES"
 
-JUJU_FULL_VERSION=`juju version` # 2.4.4-bionic-amd64
+JUJU_FULL_VERSION=`juju version` # The current version of Juju installed
 JUJU_VERSION=`echo $JUJU_FULL_VERSION | awk -F"-" '{print $1}'`
 OS_VERSION=`echo $JUJU_FULL_VERSION | awk -F"-" '{print $2}'`
 ARCH=`echo $JUJU_FULL_VERSION | awk -F"-" '{print $3}'`
@@ -37,11 +37,13 @@ ARCH=`echo $JUJU_FULL_VERSION | awk -F"-" '{print $3}'`
 function cache() {
     series=$1
     container=juju-${series}-base
-    alias=juju/$series/amd64
+    alias=juju/$series/$ARCH
 
     lxc delete $container -f || true
     lxc launch ubuntu:$series $container
-    sleep 15  # wait for network
+
+    # HACK: Wait for the container to up it's interface and get an address
+    sleep 15
 
     lxc exec $container -- apt update -y
     lxc exec $container -- apt upgrade -y
@@ -49,7 +51,6 @@ function cache() {
 
     # Install juju agent
     echo "Installing Juju agent $JUJU_FULL_VERSION"
-    # TODO: verify if the version exists
 
     lxc exec $container -- mkdir -p /var/lib/juju/tools/$JUJU_FULL_VERSION/
 
