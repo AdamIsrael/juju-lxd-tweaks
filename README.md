@@ -4,7 +4,11 @@ The purpose of this repo is to share the tweaks I've made to improve the perform
 
 ## Copy-on-write
 
+Using a [copy-on-write](https://en.wikipedia.org/wiki/Copy-on-write) file system will increase the overall LXD performance. LXD supports btrfs and zfs, but I've generally had a good experience using zfs.
+
 ## Disable automatic apt update and upgrades
+
+When Juju starts a new machine, by default, it will run `apt-get update` and `apt-get upgrade`. I disable this, opting to manually create the image used by Juju nightly, so I always have an image with current without having to repeat the process for every machine deployed.
 
 ### At bootstrap
 ```base
@@ -22,7 +26,7 @@ For all new models:
 juju model-defaults enable-os-refresh-update=false enable-os-upgrade=false
 ```
 
-## update-juju-lxd-images
+### Run update-juju-lxd-images
 
 When Juju creates a new machine, it looks for an LXD image with the alias `juju/$series/amd64`. If no image is found, a new one will be downloaded.
 
@@ -39,3 +43,7 @@ It does not attempt to pre-install pip packages, but that is the next logical st
 Currently, it only caches the image for the most recent Long Term Supported (LTS) release: Bionic. Previous releases are commented out if you're like to re-enable them.
 
 To use, you can run it manually or via crontab.
+
+## TODO
+
+- Create benchmarks of each possible configuration to measure where we've improved performance, and where we need to look for more tweaks.
