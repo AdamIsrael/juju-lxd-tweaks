@@ -25,7 +25,7 @@ BIONIC_PACKAGES="virtualenv"
 # Predownload common packages used by your charms in development
 DOWNLOAD_PACKAGES=
 
-CLOUD_INIT_PACKAGES="tmux curl bridge-utils cloud-image-utils cloud-utils cpu-checker distro-info genisoimage ibverbs-providers libaio1 libibverbs1 libiscsi7 libnl-3-200 libnl-route-3-200 libnspr4 libnss3 librados2 librbd1 msr-tools qemu-block-extra qemu-utils sharutils ubuntu-fan"
+CLOUD_INIT_PACKAGES="curl cpu-checker bridge-utils cloud-utils tmux ubuntu-fan"
 
 PACKAGES="$LAYER_BASIC $DOWNLOAD_PACKAGES"
 
@@ -71,6 +71,6 @@ function cache() {
 
 # Enable caching of the serie(s) you're developing for. By default, this will
 # be the most recent Long Term Release (LTS)
-# cache trusty "$TRUSTY_PACKAGES"
-# cache xenial "$XENIAL_PACKAGES"
+cache trusty "$TRUSTY_PACKAGES"
+cache xenial "$XENIAL_PACKAGES"
 cache bionic "$BIONIC_PACKAGES"
